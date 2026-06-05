@@ -5,7 +5,7 @@ import os
 import sys
 
 def main():
-    print("🚀 Menginisialisasi Spark Batch Analytics...")
+    print("Menginisialisasi Spark Batch Analytics...")
     
     # 1. Membuat Spark Session
     spark = SparkSession.builder \
@@ -18,7 +18,7 @@ def main():
     # 2. LOGIKA BARU: Membaca langsung dari HDFS Protocol
     # ========================================================
     hdfs_path = "hdfs://namenode:9000/data/stock_prices_daily.csv"
-    print(f"📥 Membaca data historis langsung dari HDFS: {hdfs_path}")
+    print(f"Membaca data historis langsung dari HDFS: {hdfs_path}")
     
     try:
         # Membaca data menggunakan path HDFS yang sudah pasti
@@ -37,7 +37,7 @@ def main():
     df_with_year = df_parsed.withColumn("Year", year(col("Parsed_Date")))
 
     # 5. Analisis 1: Volatilitas Rata-Rata (High - Low) & Total Volume per Sektor
-    print("🧠 Sedang menghitung Volatilitas per Sektor...")
+    print("Sedang menghitung Volatilitas per Sektor...")
     sector_agg = df_with_year.withColumn("Volatility", col("High") - col("Low")) \
         .groupBy("Sector").agg(
             avg("Volatility").alias("Avg_Volatility"),
@@ -54,7 +54,7 @@ def main():
         })
 
     # 6. Analisis 2: Top 10 Gainers Historis (Rata-rata kenaikan Close - Open per hari)
-    print("🧠 Sedang menghitung Top 10 Gainers Historis...")
+    print("Sedang menghitung Top 10 Gainers Historis...")
     gainer_agg = df_with_year.withColumn("Daily_Gain", col("Close") - col("Open")) \
         .groupBy("Ticker", "Company_Name", "Sector").agg(
             avg("Daily_Gain").alias("Avg_Daily_Gain")
@@ -71,7 +71,7 @@ def main():
         })
 
     # 7. Analisis 3: Top 10 Likuiditas Historis (Berdasarkan total volume)
-    print("🧠 Sedang menghitung Top 10 Likuiditas Saham...")
+    print("Sedang menghitung Top 10 Likuiditas Saham...")
     volume_agg = df_with_year.groupBy("Ticker", "Company_Name", "Sector").agg(
         _sum("Volume").alias("Cumulative_Volume"),
         avg("Close").alias("Avg_Close_Price")
@@ -89,7 +89,7 @@ def main():
         })
 
     # 8. Analisis 4: Tren Pertumbuhan Jangka Panjang (Rata-rata harga Close sektor per Tahun)
-    print("🧠 Sedang menghitung Tren Harga Tahunan per Sektor...")
+    print("Sedang menghitung Tren Harga Tahunan per Sektor...")
     yearly_agg = df_with_year.groupBy("Sector", "Year").agg(
         avg("Close").alias("Avg_Close_Price")
     ).orderBy("Year", "Sector")

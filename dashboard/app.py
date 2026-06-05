@@ -17,9 +17,6 @@ BATCH_FILE = os.path.join(DATA_DIR, "batch_result.json")
 # 3. KUSTOMISASI CSS TINGKAT DEWA (Anti-Kedip & Watchlist Sempurna)
 st.markdown("""
     <style>
-    /* =================================================================
-       TRIK NINJA: MENGHANCURKAN EFEK KEDIP/GELAP SAAT REFRESH 
-       ================================================================= */
     [data-testid="stAppViewContainer"] [data-stale="true"], 
     [data-testid="stFragment"] {
         opacity: 1 !important;

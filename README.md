@@ -113,16 +113,6 @@ Proyek ini menggunakan dataset historis pasar saham Amerika Serikat yang tersedi
 
 ## **Instruksi Pengunduhan Dataset**
 
-Pastikan Anda memiliki akun Kaggle dan API token yang telah dikonfigurasi.
-
-```bash
-pip install kaggle
-
-kaggle datasets download -d <owner>/<dataset-slug> --unzip
-```
-
-## **Instruksi Pengunduhan Dataset**
-
 1. Kunjungi dataset Kaggle: [US Stock Market Historical OHLCV Dataset](https://www.kaggle.com/datasets/asadullahcreative/us-stock-market-historical-ohlcv-dataset)
 2. Unduh (*download*) dan ekstrak dataset tersebut.
 3. Ubah nama file utama menjadi:
