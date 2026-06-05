@@ -344,92 +344,90 @@ with tab_live:
 # TAB 2 & 3: MARKET OVERVIEW & BATCH 
 # ==========================================
 with tab_market:
-    st.header("Keseluruhan Pasar (Live Market Pulse)")
-    st.markdown("Ikhtisar pergerakan seluruh saham berdasarkan data perdagangan hari terakhir yang masuk dari Kafka.")
-    
-    # Mengambil data khusus untuk hari terakhir (real-time state)
-    if not df_static.empty:
-        latest_date_m = df_static['Date'].max()
-        latest_market = df_static[df_static['Date'] == latest_date_m].copy()
+    @st.fragment(run_every="3s")
+    def render_market_overview():
+        # PENTING: Baca data terbaru di dalam fragment agar selalu up-to-date tiap 3 detik
+        df_live = load_streaming_data()
         
-        # Kalkulasi % Kenaikan Harian (Close terhadap Open)
-        latest_market['Daily_Change_Pct'] = ((latest_market['Close'] - latest_market['Open']) / latest_market['Open']) * 100
+        st.header("Keseluruhan Pasar (Live Market Pulse)")
+        st.markdown("Ikhtisar pergerakan seluruh saham berdasarkan data perdagangan hari terakhir yang masuk dari Kafka.")
         
-        # --- 1. LIVE MARKET PULSE (Metrik Utama) ---
-        total_vol = latest_market['Volume'].sum()
-        up_stocks = len(latest_market[latest_market['Daily_Change_Pct'] > 0])
-        down_stocks = len(latest_market[latest_market['Daily_Change_Pct'] < 0])
-        top_gainer = latest_market.loc[latest_market['Daily_Change_Pct'].idxmax()]
-        
-        # FORMATTING UNTUK TOTAL VOLUME HARI INI
-        formatted_total_vol = format_number(total_vol)
-
-        # Menampilkan 3 Kartu Metrik di atas
-        m1, m2, m3 = st.columns(3)
-        with m1:
-            st.markdown(f"""
-            <div class="metric-container" style="text-align:center;">
-                <p style='margin:0; color:#848e9c; font-size:13px'>Total Volume Hari Ini</p>
-                <h3 style='margin:0; color:#2962ff;'>{formatted_total_vol}</h3>
-            </div>
-            """, unsafe_allow_html=True)
-        with m2:
-            st.markdown(f"""
-            <div class="metric-container" style="text-align:center;">
-                <p style='margin:0; color:#848e9c; font-size:13px'>Top Gainer Today</p>
-                <h3 style='margin:0; color:#26a69a;'>{top_gainer['Ticker']} (+{top_gainer['Daily_Change_Pct']:.2f}%)</h3>
-            </div>
-            """, unsafe_allow_html=True)
-        with m3:
-            sentiment_color = "#26a69a" if up_stocks >= down_stocks else "#ef5350"
-            st.markdown(f"""
-            <div class="metric-container" style="text-align:center;">
-                <p style='margin:0; color:#848e9c; font-size:13px'>Market Sentiment (Up / Down)</p>
-                <h3 style='margin:0; color:{sentiment_color};'>{up_stocks} / {down_stocks} Saham</h3>
-            </div>
-            """, unsafe_allow_html=True)
-
-        st.markdown("<br>", unsafe_allow_html=True)
-
-        # --- 2. PRICE HEATMAP (TREEMAP) ---
-        st.subheader("Price Heatmap")
-        st.markdown("<p style='font-size: 13px; color: gray; margin-top:-10px;'>Ukuran kotak berdasarkan Volume transaksi, warna berdasarkan Kenaikan/Penurunan Harian (%).</p>", unsafe_allow_html=True)
-        
-        # Membangun grafik Treemap yang mewah
-        fig_tree = px.treemap(
-            latest_market, 
-            path=[px.Constant("US Market"), 'Sector', 'Ticker'], 
-            values='Volume',
-            color='Daily_Change_Pct',
-            color_continuous_scale='RdYlGn', # Skala warna Merah-Kuning-Hijau
-            color_continuous_midpoint=0,
-            custom_data=['Company_Name', 'Daily_Change_Pct', 'Close']
-        )
-        # Kustomisasi tooltip saat kursor diarahkan ke kotak saham
-        fig_tree.update_traces(
-            hovertemplate="<b>%{label}</b><br>Company: %{customdata[0]}<br>Close Price: $%{customdata[2]:.2f}<br>Daily Change: %{customdata[1]:.2f}%<br>Volume: %{value}<extra></extra>"
-        )
-        fig_tree.update_layout(margin=dict(t=20, l=10, r=10, b=10), template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', height=450)
-        st.plotly_chart(fig_tree, use_container_width=True)
-
-        st.markdown("---")
-
-        # --- 3. DATA LAMA YANG DIPERTAHANKAN (BOTTOM SECTION) ---
-        c1, c2 = st.columns(2)
-        with c1:
-            st.subheader("Top 10 Volume")
-            top_vol = df_static.groupby(["Ticker", "Company_Name"])["Volume"].sum().reset_index().sort_values("Volume", ascending=False).head(10)
-
-            top_vol["Total Volume"] = top_vol["Volume"].apply(lambda x: format_number(x))
-            # Hapus kolom Volume yang asli agar tabel terlihat rapi
-            top_vol = top_vol.drop(columns=['Volume'])
-            st.dataframe(top_vol.set_index("Ticker"), use_container_width=True)
-        with c2:
-            st.subheader("Distribusi Sektor")
-            st.bar_chart(df_static["Sector"].value_counts(), color="#2962ff")
+        if not df_live.empty:
+            latest_date_m = df_live['Date'].max()
+            latest_market = df_live[df_live['Date'] == latest_date_m].copy()
             
-    else:
-        st.warning("Menunggu aliran data market dari Kafka...")
+            latest_market['Daily_Change_Pct'] = ((latest_market['Close'] - latest_market['Open']) / latest_market['Open']) * 100
+            
+            total_vol = latest_market['Volume'].sum()
+            up_stocks = len(latest_market[latest_market['Daily_Change_Pct'] > 0])
+            down_stocks = len(latest_market[latest_market['Daily_Change_Pct'] < 0])
+            top_gainer = latest_market.loc[latest_market['Daily_Change_Pct'].idxmax()]
+            
+            formatted_total_vol = format_number(total_vol)
+
+            m1, m2, m3 = st.columns(3)
+            with m1:
+                st.markdown(f"""
+                <div class="metric-container" style="text-align:center;">
+                    <p style='margin:0; color:#848e9c; font-size:13px'>Total Volume Hari Ini</p>
+                    <h3 style='margin:0; color:#2962ff;'>{formatted_total_vol}</h3>
+                </div>
+                """, unsafe_allow_html=True)
+            with m2:
+                st.markdown(f"""
+                <div class="metric-container" style="text-align:center;">
+                    <p style='margin:0; color:#848e9c; font-size:13px'>Top Gainer Today</p>
+                    <h3 style='margin:0; color:#26a69a;'>{top_gainer['Ticker']} (+{top_gainer['Daily_Change_Pct']:.2f}%)</h3>
+                </div>
+                """, unsafe_allow_html=True)
+            with m3:
+                sentiment_color = "#26a69a" if up_stocks >= down_stocks else "#ef5350"
+                st.markdown(f"""
+                <div class="metric-container" style="text-align:center;">
+                    <p style='margin:0; color:#848e9c; font-size:13px'>Market Sentiment (Up / Down)</p>
+                    <h3 style='margin:0; color:{sentiment_color};'>{up_stocks} / {down_stocks} Saham</h3>
+                </div>
+                """, unsafe_allow_html=True)
+
+            st.markdown("<br>", unsafe_allow_html=True)
+
+            st.subheader("Price Heatmap")
+            st.markdown("<p style='font-size: 13px; color: gray; margin-top:-10px;'>Ukuran kotak berdasarkan Volume transaksi, warna berdasarkan Kenaikan/Penurunan Harian (%).</p>", unsafe_allow_html=True)
+            
+            fig_tree = px.treemap(
+                latest_market, 
+                path=[px.Constant("US Market"), 'Sector', 'Ticker'], 
+                values='Volume',
+                color='Daily_Change_Pct',
+                color_continuous_scale='RdYlGn',
+                color_continuous_midpoint=0,
+                custom_data=['Company_Name', 'Daily_Change_Pct', 'Close']
+            )
+            fig_tree.update_traces(
+                hovertemplate="<b>%{label}</b><br>Company: %{customdata[0]}<br>Close Price: $%{customdata[2]:.2f}<br>Daily Change: %{customdata[1]:.2f}%<br>Volume: %{value}<extra></extra>"
+            )
+            fig_tree.update_layout(margin=dict(t=20, l=10, r=10, b=10), template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', height=450)
+            st.plotly_chart(fig_tree, use_container_width=True)
+
+            st.markdown("---")
+
+            c1, c2 = st.columns(2)
+            with c1:
+                st.subheader("Top 10 Volume")
+                top_vol = df_live.groupby(["Ticker", "Company_Name"])["Volume"].sum().reset_index().sort_values("Volume", ascending=False).head(10)
+
+                top_vol["Total Volume"] = top_vol["Volume"].apply(lambda x: format_number(x))
+                top_vol = top_vol.drop(columns=['Volume'])
+                st.dataframe(top_vol.set_index("Ticker"), use_container_width=True)
+            with c2:
+                st.subheader("Distribusi Sektor")
+                st.bar_chart(df_live["Sector"].value_counts(), color="#2962ff")
+                
+        else:
+            st.warning("Menunggu aliran data market dari Kafka...")
+            
+    # Eksekusi Fragment Market Overview
+    render_market_overview()
 
 with tab_batch:
     st.header("Historical Batch Analytics")
@@ -445,6 +443,59 @@ with tab_batch:
         volume_df = pd.DataFrame(batch_data.get("top_volume", []))
         yearly_df = pd.DataFrame(batch_data.get("yearly_performance", []))
 
+        # --- 1. SCORECARD HISTORIS ---
+        if not sector_df.empty and not gainers_df.empty:
+            top_volatile_sector = sector_df.loc[sector_df['Avg_Volatility'].idxmax()]['Sector']
+            top_gainer_hist = gainers_df.loc[gainers_df['Avg_Daily_Gain'].idxmax()]
+            top_volume_sector = sector_df.loc[sector_df['Total_Volume'].idxmax()]['Sector']
+
+            mb1, mb2, mb3 = st.columns(3)
+            with mb1:
+                st.markdown(f"""
+                <div class="metric-container" style="text-align:center;">
+                    <p style='margin:0; color:#848e9c; font-size:13px'>Sektor Paling Volatil (Risiko Tertinggi)</p>
+                    <h3 style='margin:0; color:#ef5350;'>{top_volatile_sector}</h3>
+                </div>
+                """, unsafe_allow_html=True)
+            with mb2:
+                st.markdown(f"""
+                <div class="metric-container" style="text-align:center;">
+                    <p style='margin:0; color:#848e9c; font-size:13px'>Top Gainer Historis (Rata-rata / Hari)</p>
+                    <h3 style='margin:0; color:#26a69a;'>{top_gainer_hist['Ticker']} (+${top_gainer_hist['Avg_Daily_Gain']:.2f})</h3>
+                </div>
+                """, unsafe_allow_html=True)
+            with mb3:
+                st.markdown(f"""
+                <div class="metric-container" style="text-align:center;">
+                    <p style='margin:0; color:#848e9c; font-size:13px'>Sektor Paling Likuid (Total Volume)</p>
+                    <h3 style='margin:0; color:#2962ff;'>{top_volume_sector}</h3>
+                </div>
+                """, unsafe_allow_html=True)
+
+            st.markdown("<br>", unsafe_allow_html=True)
+
+        # --- 2. HISTORICAL HEATMAP (TREEMAP) ---
+        if not volume_df.empty:
+            st.subheader("Historical Volume Heatmap (Top 10)")
+            st.markdown("<p style='font-size: 13px; color: gray; margin-top:-10px;'>Ukuran kotak berdasarkan akumulasi Volume seumur hidup. Warna berdasarkan Rata-rata Harga Penutupan.</p>", unsafe_allow_html=True)
+            
+            fig_tree_batch = px.treemap(
+                volume_df, 
+                path=[px.Constant("Top 10 Likuiditas"), 'Sector', 'Ticker'], 
+                values='Cumulative_Volume',
+                color='Avg_Close_Price',
+                color_continuous_scale='Blues',
+                custom_data=['Company_Name', 'Avg_Close_Price']
+            )
+            fig_tree_batch.update_traces(
+                hovertemplate="<b>%{label}</b><br>Company: %{customdata[0]}<br>Avg Close Price: $%{customdata[1]:.2f}<br>Cumulative Volume: %{value}<extra></extra>"
+            )
+            fig_tree_batch.update_layout(margin=dict(t=20, l=10, r=10, b=10), template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', height=400)
+            st.plotly_chart(fig_tree_batch, use_container_width=True)
+
+        st.markdown("---")
+
+        # --- 3. GRAFIK ---
         bc1, bc2 = st.columns(2)
         with bc1:
             st.subheader("Risiko (Volatilitas) Sektor")
