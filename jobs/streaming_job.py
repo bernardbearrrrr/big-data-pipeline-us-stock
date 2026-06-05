@@ -81,7 +81,7 @@ def main():
         .filter(col("Ticker").isNotNull()) # Buang data kosong/error
 
     # 5. Menjalankan stream (Mode 'append' karena data hari-hari bertambah terus)
-    print("⏳ Menunggu aliran Market Data dari Kafka...")
+    print("Menunggu aliran Market Data dari Kafka...")
     query = parsed_df.writeStream \
         .outputMode("append") \
         .foreachBatch(process_batch) \
