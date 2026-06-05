@@ -14,14 +14,12 @@ def main():
         
     spark.sparkContext.setLogLevel("WARN")
 
-    # ========================================================
-    # 2. LOGIKA BARU: Membaca langsung dari HDFS Protocol
-    # ========================================================
+    # 2. Membaca langsung dari HDFS Protocol
     hdfs_path = "hdfs://namenode:9000/data/stock_prices_daily.csv"
     print(f"Membaca data historis langsung dari HDFS: {hdfs_path}")
     
     try:
-        # Membaca data menggunakan path HDFS yang sudah pasti
+        # Membaca data menggunakan path HDFS 
         df = spark.read.csv(hdfs_path, header=True, inferSchema=True)
     except Exception as e:
         print(f"❌ ERROR: File tidak ditemukan di HDFS! Pastikan kamu sudah meng-uploadnya dengan perintah 'hdfs dfs -put ...'")

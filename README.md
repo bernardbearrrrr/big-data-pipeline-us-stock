@@ -107,7 +107,7 @@ Proyek ini menggunakan dataset historis pasar saham Amerika Serikat yang tersedi
 |------------|---------|
 | Domain | Pasar Keuangan dan Saham (Finance / Stock Market) |
 | Sumber | Kaggle (US Stock Market Historical OHLCV) |
-| Ukuran File | ~50 MB |
+| Ukuran File | ~33 MB |
 | Karakteristik Data | Memuat data harian untuk berbagai perusahaan yang mencakup harga pembukaan, penutupan, tertinggi, terendah, dan volume transaksi |
 | Field Kunci | Date, Open, High, Low, Close, Volume, Sector, Ticker, Company_Name |
 

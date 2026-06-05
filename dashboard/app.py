@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 from datetime import timedelta
 
-# 1. Konfigurasi Halaman Dasar (Tanpa Emoji, Bersih)
+# 1. Konfigurasi Halaman Dasar
 st.set_page_config(page_title="US Stock TradingView", layout="wide", initial_sidebar_state="collapsed")
 
 # 2. Path Data
@@ -14,7 +14,7 @@ DATA_DIR = os.getenv("DASHBOARD_DIR", "/app/dashboard_data")
 HISTORY_FILE = os.path.join(DATA_DIR, "history.jsonl")
 BATCH_FILE = os.path.join(DATA_DIR, "batch_result.json") 
 
-# 3. KUSTOMISASI CSS TINGKAT DEWA (Anti-Kedip & Watchlist Sempurna)
+# 3. KUSTOMISASI CSS 
 st.markdown("""
     <style>
     [data-testid="stAppViewContainer"] [data-stale="true"], 
@@ -120,9 +120,23 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 4. State Management (Mengingat Saham Terakhir yang Diklik)
+# 4. State Management 
 if "current_ticker" not in st.session_state:
     st.session_state.current_ticker = "AAPL"
+
+# Function Format DUITTT :)))
+def format_number(num):
+    """Format angka menjadi K (Ribu), M (Juta), atau B (Miliar)"""
+    if pd.isna(num):
+        return "0"
+    if num >= 1_000_000_000:
+        return f"{num / 1_000_000_000:,.2f} B"
+    elif num >= 1_000_000:
+        return f"{num / 1_000_000:,.2f} M"
+    elif num >= 1_000:
+        return f"{num / 1_000:,.2f} K"
+    else:
+        return f"{num:,.0f}"
 
 # 5. Fungsi Load Data
 def load_streaming_data():
@@ -230,10 +244,10 @@ with tab_live:
             st.plotly_chart(fig, use_container_width=True)
 
         with col_side:
-            # --- BAGIAN 1: WATCHLIST GRID RAPI ---
+            # --- BAGIAN 1: WATCHLIST GRID ---
             st.markdown("<h4 style='margin-bottom: 5px; color: white;'>Watchlist</h4>", unsafe_allow_html=True)
             
-            # Header Watchlist (Sekarang persis ukurannya 25% x 4)
+            # Header Watchlist (ukurannya 25% x 4)
             st.markdown("""
             <div class="wl-header">
                 <span>Symbol</span>
@@ -262,8 +276,6 @@ with tab_live:
                 else:
                     color_tag, val_sign, c_val, pct_str = "gray", "", 0, "0.00%"
 
-                # INI DIA MAGISNYA: Streamlit akan membungkus ini dalam <p> tag,
-                # dan CSS kita akan menyulapnya jadi GRID!
                 btn_label = f"**{tckr}** *{row['Close']:.2f}* :{color_tag}[{val_sign}{c_val:.2f}] :{color_tag}[{val_sign}{pct_str}]"
                 
                 if st.button(btn_label, key=f"wl_{tckr}", use_container_width=True):
@@ -272,13 +284,16 @@ with tab_live:
             
             st.markdown("<div style='margin-bottom: 10px;'></div>", unsafe_allow_html=True)
 
-            # --- BAGIAN 2: KEY STATS & GRAFIK (SCROLLABLE AREA) ---
+            # --- BAGIAN 2: KEY STATS & GRAFIK ---
             with st.container(height=380):
                 st.markdown("<h4 style='color: white;'>Key Stats</h4>", unsafe_allow_html=True)
+                
+                formatted_vol = format_number(latest_data['Volume'])
+                
                 st.markdown(f"""
                 <div class="metric-container">
                     <p style='margin:0; color:#848e9c; font-size:12px'>Volume Terakhir</p>
-                    <h4 style='margin:0;'>{latest_data['Volume'] / 1_000_000:,.2f} M</h4>
+                    <h4 style='margin:0;'>{formatted_vol}</h4>
                 </div>
                 <div class="metric-container">
                     <p style='margin:0; color:#848e9c; font-size:12px'>Rentang Harian (Low - High)</p>
@@ -326,7 +341,7 @@ with tab_live:
     render_live_dashboard()
 
 # ==========================================
-# TAB 2 & 3: MARKET OVERVIEW & BATCH (TETAP SAMA)
+# TAB 2 & 3: MARKET OVERVIEW & BATCH 
 # ==========================================
 with tab_market:
     st.header("Keseluruhan Pasar (Live Market Pulse)")
@@ -346,13 +361,16 @@ with tab_market:
         down_stocks = len(latest_market[latest_market['Daily_Change_Pct'] < 0])
         top_gainer = latest_market.loc[latest_market['Daily_Change_Pct'].idxmax()]
         
+        # FORMATTING UNTUK TOTAL VOLUME HARI INI
+        formatted_total_vol = format_number(total_vol)
+
         # Menampilkan 3 Kartu Metrik di atas
         m1, m2, m3 = st.columns(3)
         with m1:
             st.markdown(f"""
             <div class="metric-container" style="text-align:center;">
                 <p style='margin:0; color:#848e9c; font-size:13px'>Total Volume Hari Ini</p>
-                <h3 style='margin:0; color:#2962ff;'>{total_vol / 1_000_000:,.0f} Juta</h3>
+                <h3 style='margin:0; color:#2962ff;'>{formatted_total_vol}</h3>
             </div>
             """, unsafe_allow_html=True)
         with m2:
@@ -401,7 +419,10 @@ with tab_market:
         with c1:
             st.subheader("Top 10 Volume")
             top_vol = df_static.groupby(["Ticker", "Company_Name"])["Volume"].sum().reset_index().sort_values("Volume", ascending=False).head(10)
-            top_vol["Volume (M)"] = top_vol["Volume"].apply(lambda x: f"${x / 1_000_000:,.2f} M")
+
+            top_vol["Total Volume"] = top_vol["Volume"].apply(lambda x: format_number(x))
+            # Hapus kolom Volume yang asli agar tabel terlihat rapi
+            top_vol = top_vol.drop(columns=['Volume'])
             st.dataframe(top_vol.set_index("Ticker"), use_container_width=True)
         with c2:
             st.subheader("Distribusi Sektor")

@@ -5,16 +5,12 @@ import pandas as pd
 from kafka import KafkaProducer
 from hdfs import InsecureClient # LIBRARY BARU: Untuk terhubung ke Hadoop/HDFS via jaringan
 
-# ==========================================
 # KONFIGURASI ENVIRONMENT & KAFKA
-# ==========================================
 KAFKA_BROKER = os.getenv("KAFKA_BROKER", "kafka:9092")
 TOPIC_NAME = os.getenv("KAFKA_TOPIC", "stock-market-stream")
 DELAY_PER_DAY = 3  # Detik jeda antar hari saat simulasi pengiriman berjalan
 
-# ==========================================
 # KONFIGURASI KONEKSI KE HDFS (NAMENODE)
-# ==========================================
 HDFS_URL = "http://namenode:9870" # Port WebHDFS bawaan Hadoop untuk komunikasi HTTP
 HDFS_USER = "root" # User default di dalam container HDFS
 HDFS_FILE_PATH = "/data/stock_prices_daily.csv" # Lokasi persis file CSV di dalam HDFS (bukan lokal)
