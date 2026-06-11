@@ -3,6 +3,16 @@
 **Course:** Big Data Processing  
 **Level:** Undergraduate (3rd Year)
 
+### **Team Members (Kelas B - Kelompok 4)**
+* **Bernardo Frederick Kowe** - 0706022310049
+* **XXXXXX** - NIM
+* **XXXXXX** - NIM
+* **XXXXXX** - NIM
+* **XXXXXX** - NIM
+* **XXXXXX** - NIM
+
+### **Maaf saya kurang tahu nama teman" saya dan NIM, Terima Kasih**
+
 ---
 
 # **1. Architecture Diagram**
