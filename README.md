@@ -214,7 +214,7 @@ docker exec -it bdp-producer python producer/producer.py
 Buka browser web Anda dan navigasikan ke alamat berikut:
 
 ```text
-http://localhost:8501
+http://localhost:9090
 ```
 
 ---
@@ -267,17 +267,27 @@ Hasil analisis disimpan pada:
 
 ### **Tab Live TradingView**
 
+![Live Trading View](assets/live_tradingview.png)
+
 - Grafik Candlestick dinamis
 - Update otomatis tanpa refresh halaman
 - Watchlist pada panel kanan
 
 ### **Tab Market Overview**
 
+![Market Overview](assets/market_overview.png)
+
 - Kartu metrik "Live Market Pulse"
 - Price Heatmap berbasis Treemap
 - Pengelompokan saham berdasarkan volume dan perubahan persentase harian
 
 ### **Tab Batch Analytics**
+
+Menampilkan *Scorecard* eksekutif untuk merangkum hasil komputasi berat, serta visualisasi Treemap historis yang mengelompokkan likuiditas saham seumur hidup.
+
+![Batch Heatmap](assets/batch_heatmap.png)
+
+![Batch Charts](assets/batch_charts.png)
 
 Menampilkan empat grafik analisis mendalam dari data historis:
 
@@ -290,17 +300,36 @@ Menampilkan empat grafik analisis mendalam dari data historis:
 
 # **7. Findings & Conclusion**
 
-Berdasarkan hasil analisis dari pipeline Big Data ini, kami menemukan beberapa wawasan utama.
+Berdasarkan hasil eksekusi dari pipeline Big Data ini dan tangkapan layar (snapshot) saat sistem dijalankan, kami berhasil menjawab seluruh pertanyaan bisnis yang dirumuskan pada Problem Statement.
 
-## **1. Analisis Historis (Batch)**
+## **A. Batch Insights (Analisis Jangka Panjang)**
 
-Melalui pemrosesan HDFS oleh Spark, terlihat jelas bahwa sektor Teknologi memiliki volatilitas (rentang antara harga tertinggi dan terendah) dan dominasi volume yang jauh lebih masif dibandingkan sektor lain. Tren ini menunjukkan tingkat spekulasi dan likuiditas yang tinggi pada sektor tersebut secara historis.
+Analisis ini memproses seluruh data historis dari HDFS untuk menemukan fundamental pasar:
 
-## **2. Pemantauan Waktu Nyata (Stream)**
+1. **Sektor dengan Tingkat Risiko/Volatilitas Tertinggi:**
+   Berdasarkan visualisasi Bar Chart "Risiko (Volatilitas) Sektor", sektor **Healthcare** menduduki peringkat pertama sebagai sektor paling volatil secara historis, disusul dengan ketat oleh sektor **Technology**. Hal ini menunjukkan bahwa saham-saham di bidang kesehatan dan teknologi memiliki rentang fluktuasi harga harian (High - Low) yang paling ekstrem dibandingkan sektor lainnya.
 
-Pada pemantauan simulasi aliran data langsung, rasio sentimen pasar (*Market Sentiment*) berubah secara dinamis setiap harinya. Melalui integrasi Kafka dan Spark Streaming, sistem berhasil menangkap anomali perubahan volume mendadak (*spike*) yang langsung diproyeksikan pada fitur Treemap Heatmap, membuktikan bahwa arsitektur ini sanggup memberikan informasi kritis seketika (*low latency*) bagi analis bisnis.
+2. **Perusahaan dengan Keuntungan Rata-Rata Harian (Daily Gain) Tertinggi:**
+   Berdasarkan metrik Top Gainers Historis, perusahaan **Costco Wholesale Corporation (COST)** memimpin pasar dengan mencatatkan rata-rata keuntungan harian tertinggi (+0.32 USD per hari perdagangan). Posisi ini diikuti oleh perusahaan raksasa lain seperti Goldman Sachs (GS), Linde plc (LIN), dan Caterpillar Inc. (CAT).
 
-Secara keseluruhan, arsitektur ini membuktikan kemampuannya dalam melakukan dekopling (pemisahan tugas) antara penyimpanan mentah, perantara pesan, dan pemrosesan komputasi berat dengan sangat andal.
+3. **Tren Pertumbuhan Harga Saham Per Sektor:**
+   Melalui Line Chart "Tren Harga Tahunan Sektor", terlihat jelas adanya tren pertumbuhan (*capital gain*) yang positif dan konsisten dari tahun 2020 hingga momen data terakhir. Sektor **Technology** dan **Healthcare** menunjukkan kurva pertumbuhan harga penutupan yang paling curam dan stabil, sementara sektor seperti *Basic Materials* cenderung lebih stagnan.
+
+## **B. Real-Time Metrics (Analisis Waktu Nyata)**
+
+Data di bawah ini merupakan hasil observasi langsung (snapshot) dari dasbor Streamlit saat aliran data Kafka sedang berjalan secara waktu nyata:
+
+1. **Total Sirkulasi Volume Transaksi Hari Ini:**
+   Pada momen observasi *Live Market Pulse*, mesin *streaming* menangkap sirkulasi volume transaksi yang sangat masif, mencapai angka **1.86 Miliar (1.86 B)** lembar saham yang diperdagangkan dalam satu hari aktif.
+
+2. **Perbandingan Sentimen Pasar Secara Keseluruhan:**
+   Sistem mendeteksi sentimen pasar yang sangat positif (*Bullish*) pada saat *snapshot* diambil. Indikator "Market Sentiment" menunjukkan angka **52 / 68 Saham**, yang berarti mayoritas dominan (52 entitas perusahaan) sedang mengalami kenaikan harga, berbanding terbalik dengan sebagian kecil yang mengalami penurunan.
+
+3. **Penyumbang Keuntungan Harian (Top Gainer) Tertinggi Saat Ini:**
+   Pada detik observasi tersebut, algoritma *streaming* menangkap **Tesla, Inc. (TSLA)** sebagai *Top Gainer* utama dengan lonjakan kenaikan harga harian sebesar **+8.16%**. Dominasi likuiditas Tesla ini juga tervalidasi dengan sangat jelas melalui blok hijau terbesar pada grafik *Price Heatmap*.
+
+## **Kesimpulan Arsitektur**
+Secara keseluruhan, arsitektur ini membuktikan kemampuannya dalam melakukan dekopling (pemisahan tugas) antara penyimpanan mentah di HDFS, distribusi pesan melalui Kafka berlatensi rendah, dan pemrosesan komputasi berat di Apache Spark dengan sangat andal.
 
 ---
 
