@@ -1,0 +1,141 @@
+version: '3.8'
+
+# Mendeklarasikan volume penyimpanan persisten untuk HDFS
+volumes:
+  namenode_data:
+  datanode_data:
+
+services:
+  # 1. Zookeeper (Manajer untuk Kafka)
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: bdp-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  # 2. Apache Kafka (Message Broker)
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: bdp-kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  # 3. Kafka UI (Untuk memantau topik dan pesan masuk - Sesuai standar kelas)
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: bdp-kafka-ui
+    depends_on:
+      - kafka
+    ports:
+      - "8085:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+
+  # 4. HDFS Namenode (Master Hadoop / Gudang Utama HDFS)
+  namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    container_name: bdp-namenode
+    ports:
+      - "9870:9870" # Port Web UI HDFS untuk Producer Python
+      - "9000:9000" # Port IPC/RPC native untuk dibaca Apache Spark
+    environment:
+      - CLUSTER_NAME=bdp-cluster
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+    volumes:
+      - namenode_data:/hadoop/dfs/name
+      # Jembatan sementara HANYA untuk upload CSV manual ke HDFS
+      - ./data:/tmp/local_data
+
+  # 5. HDFS Datanode (Pekerja penyimpan blok data di HDFS)
+  datanode:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: bdp-datanode
+    depends_on:
+      - namenode
+    environment:
+      - CLUSTER_NAME=bdp-cluster
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+    volumes:
+      - datanode_data:/hadoop/dfs/data
+
+  # 6. Apache Spark Master (Sesuai dengan image kelas: apache/spark:4.0.0)
+  spark-master:
+    image: apache/spark:4.0.0
+    container_name: bdp-spark-master
+    depends_on:
+      - kafka
+      - namenode # Bergantung pada HDFS agar siap dibaca
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master
+    environment:
+      - HOME=/tmp
+      - SPARK_SUBMIT_OPTS=-Duser.home=/tmp
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - KAFKA_TOPIC=stock-market-stream
+    ports:
+      - "7077:7077"
+      - "8082:8080" # Spark Master UI
+    volumes:
+      - ./jobs:/opt/project/jobs
+      - ./checkpoints:/opt/project/checkpoints
+      - ./dashboard_data:/opt/project/dashboard_data
+      # (Volume ./data Dihapus! Spark akan membaca file lewat jaringan hdfs://namenode:9000)
+
+  # 7. Apache Spark Worker (Sesuai dengan image kelas: apache/spark:4.0.0)
+  spark-worker:
+    image: apache/spark:4.0.0
+    container_name: bdp-spark-worker
+    depends_on:
+      - spark-master
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
+    environment:
+      - SPARK_WORKER_MEMORY=2G
+      - SPARK_WORKER_CORES=2
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - KAFKA_TOPIC=stock-market-stream
+    ports:
+      - "8083:8081" # Spark Worker UI
+    volumes:
+      - ./jobs:/opt/project/jobs
+      - ./checkpoints:/opt/project/checkpoints
+      - ./dashboard_data:/opt/project/dashboard_data
+      # (Volume ./data Dihapus juga di sini!)
+
+  # 8. Python Producer (Agar Python script berjalan rapi dalam Docker)
+  producer:
+    build: ./producer
+    container_name: bdp-producer
+    depends_on:
+      - kafka
+      - namenode
+    volumes:
+      - ./producer:/app/producer
+      # (Volume ./data Dihapus! Producer akan membaca CSV dari WebHDFS port 9870)
+    # Perintah sleep ini agar container producer standby.
+    # Nanti kita run scriptnya pakai: docker exec -it bdp-producer python producer.py
+    command: tail -f /dev/null
+
+  # 9. Streamlit Dashboard (Persis seperti Week 12)
+  dashboard:
+    build: ./dashboard
+    container_name: bdp-dashboard
+    depends_on:
+      - spark-master
+    ports:
+      - "9090:8501"
+    volumes:
+      - ./dashboard_data:/app/dashboard_data
+    environment:
+      - DASHBOARD_DIR=/app/dashboard_data

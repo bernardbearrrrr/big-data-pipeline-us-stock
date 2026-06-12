@@ -1,0 +1,500 @@
+{
+    "sector_analysis": [
+        {
+            "Sector": "Financial Services",
+            "Avg_Volatility": 4.078886971278561,
+            "Total_Volume": 271636475600.0
+        },
+        {
+            "Sector": "Healthcare",
+            "Avg_Volatility": 5.727742887474394,
+            "Total_Volume": 189451906003.0
+        },
+        {
+            "Sector": "Industrials",
+            "Avg_Volatility": 4.138873526721421,
+            "Total_Volume": 126921213179.0
+        },
+        {
+            "Sector": "Technology",
+            "Avg_Volatility": 4.58184616325523,
+            "Total_Volume": 1126582535088.0
+        },
+        {
+            "Sector": "Consumer Cyclical",
+            "Avg_Volatility": 4.367768029100233,
+            "Total_Volume": 336423836200.0
+        },
+        {
+            "Sector": "Basic Materials",
+            "Avg_Volatility": 3.2533096546596982,
+            "Total_Volume": 77982499584.0
+        },
+        {
+            "Sector": "Consumer Defensive",
+            "Avg_Volatility": 3.107912654380763,
+            "Total_Volume": 108031409000.0
+        },
+        {
+            "Sector": "Communication Services",
+            "Avg_Volatility": 2.7234380430191596,
+            "Total_Volume": 331721843968.0
+        },
+        {
+            "Sector": "Energy",
+            "Avg_Volatility": 2.1314442214223424,
+            "Total_Volume": 149298579200.0
+        }
+    ],
+    "top_gainers": [
+        {
+            "Ticker": "COST",
+            "Company_Name": "Costco Wholesale Corporation",
+            "Sector": "Consumer Defensive",
+            "Avg_Daily_Gain": 0.32293825837571727
+        },
+        {
+            "Ticker": "GS",
+            "Company_Name": "The Goldman Sachs Group, Inc.",
+            "Sector": "Financial Services",
+            "Avg_Daily_Gain": 0.3036743425653704
+        },
+        {
+            "Ticker": "LIN",
+            "Company_Name": "Linde plc",
+            "Sector": "Basic Materials",
+            "Avg_Daily_Gain": 0.20773236484975163
+        },
+        {
+            "Ticker": "CAT",
+            "Company_Name": "Caterpillar Inc.",
+            "Sector": "Industrials",
+            "Avg_Daily_Gain": 0.20633868298527658
+        },
+        {
+            "Ticker": "DE",
+            "Company_Name": "Deere & Company",
+            "Sector": "Industrials",
+            "Avg_Daily_Gain": 0.20392166186088767
+        },
+        {
+            "Ticker": "VRTX",
+            "Company_Name": "Vertex Pharmaceuticals Incorporated",
+            "Sector": "Healthcare",
+            "Avg_Daily_Gain": 0.1738175482237378
+        },
+        {
+            "Ticker": "LLY",
+            "Company_Name": "Eli Lilly and Company",
+            "Sector": "Healthcare",
+            "Avg_Daily_Gain": 0.15921884645955378
+        },
+        {
+            "Ticker": "AAPL",
+            "Company_Name": "Apple Inc.",
+            "Sector": "Technology",
+            "Avg_Daily_Gain": 0.1562356112632627
+        },
+        {
+            "Ticker": "HD",
+            "Company_Name": "The Home Depot, Inc.",
+            "Sector": "Consumer Cyclical",
+            "Avg_Daily_Gain": 0.14130504227293336
+        },
+        {
+            "Ticker": "NOC",
+            "Company_Name": "Northrop Grumman Corporation",
+            "Sector": "Industrials",
+            "Avg_Daily_Gain": 0.12302729525157918
+        }
+    ],
+    "top_volume": [
+        {
+            "Ticker": "NVDA",
+            "Company_Name": "NVIDIA Corporation",
+            "Sector": "Technology",
+            "Cumulative_Volume": 621774113800.0,
+            "Avg_Close_Price": 59.94600983287302
+        },
+        {
+            "Ticker": "TSLA",
+            "Company_Name": "Tesla, Inc.",
+            "Sector": "Consumer Cyclical",
+            "Cumulative_Volume": 183983350700.0,
+            "Avg_Close_Price": 240.8983682688362
+        },
+        {
+            "Ticker": "AAPL",
+            "Company_Name": "Apple Inc.",
+            "Sector": "Technology",
+            "Cumulative_Volume": 128850014900.0,
+            "Avg_Close_Price": 166.6239523474479
+        },
+        {
+            "Ticker": "AMZN",
+            "Company_Name": "Amazon.com, Inc.",
+            "Sector": "Consumer Cyclical",
+            "Cumulative_Volume": 98679058500.0,
+            "Avg_Close_Price": 159.89466065148966
+        },
+        {
+            "Ticker": "AMD",
+            "Company_Name": "Advanced Micro Devices, Inc.",
+            "Sector": "Technology",
+            "Cumulative_Volume": 93378576300.0,
+            "Avg_Close_Price": 113.89471004374252
+        },
+        {
+            "Ticker": "NFLX",
+            "Company_Name": "Netflix, Inc.",
+            "Sector": "Communication Services",
+            "Cumulative_Volume": 91233998700.0,
+            "Avg_Close_Price": 57.9746175685224
+        },
+        {
+            "Ticker": "INTC",
+            "Company_Name": "Intel Corporation",
+            "Sector": "Technology",
+            "Cumulative_Volume": 79779632000.0,
+            "Avg_Close_Price": 37.97227120166493
+        },
+        {
+            "Ticker": "BAC",
+            "Company_Name": "Bank of America Corporation",
+            "Sector": "Financial Services",
+            "Cumulative_Volume": 73751839300.0,
+            "Avg_Close_Price": 34.628960924428135
+        },
+        {
+            "Ticker": "T",
+            "Company_Name": "AT&T Inc.",
+            "Sector": "Communication Services",
+            "Cumulative_Volume": 70269216934.0,
+            "Avg_Close_Price": 17.638153461129896
+        },
+        {
+            "Ticker": "PFE",
+            "Company_Name": "Pfizer Inc.",
+            "Sector": "Healthcare",
+            "Cumulative_Volume": 53977513194.0,
+            "Avg_Close_Price": 29.923642611099503
+        }
+    ],
+    "yearly_performance": [
+        {
+            "Sector": "Basic Materials",
+            "Year": 2020,
+            "Avg_Close_Price": 108.47896843524207
+        },
+        {
+            "Sector": "Communication Services",
+            "Year": 2020,
+            "Avg_Close_Price": 80.88538082981326
+        },
+        {
+            "Sector": "Consumer Cyclical",
+            "Year": 2020,
+            "Avg_Close_Price": 121.47856946786244
+        },
+        {
+            "Sector": "Consumer Defensive",
+            "Year": 2020,
+            "Avg_Close_Price": 115.54806338500303
+        },
+        {
+            "Sector": "Energy",
+            "Year": 2020,
+            "Avg_Close_Price": 35.77342824265804
+        },
+        {
+            "Sector": "Financial Services",
+            "Year": 2020,
+            "Avg_Close_Price": 127.3708762388235
+        },
+        {
+            "Sector": "Healthcare",
+            "Year": 2020,
+            "Avg_Close_Price": 176.4337076246561
+        },
+        {
+            "Sector": "Industrials",
+            "Year": 2020,
+            "Avg_Close_Price": 134.04367796987958
+        },
+        {
+            "Sector": "Technology",
+            "Year": 2020,
+            "Avg_Close_Price": 116.3987713635914
+        },
+        {
+            "Sector": "Basic Materials",
+            "Year": 2021,
+            "Avg_Close_Price": 143.2159256624797
+        },
+        {
+            "Sector": "Communication Services",
+            "Year": 2021,
+            "Avg_Close_Price": 110.40387717815098
+        },
+        {
+            "Sector": "Consumer Cyclical",
+            "Year": 2021,
+            "Avg_Close_Price": 177.6838439267779
+        },
+        {
+            "Sector": "Consumer Defensive",
+            "Year": 2021,
+            "Avg_Close_Price": 153.3331497283209
+        },
+        {
+            "Sector": "Energy",
+            "Year": 2021,
+            "Avg_Close_Price": 49.75944564834474
+        },
+        {
+            "Sector": "Financial Services",
+            "Year": 2021,
+            "Avg_Close_Price": 181.94746963258774
+        },
+        {
+            "Sector": "Healthcare",
+            "Year": 2021,
+            "Avg_Close_Price": 214.01176241352445
+        },
+        {
+            "Sector": "Industrials",
+            "Year": 2021,
+            "Avg_Close_Price": 174.60048631599972
+        },
+        {
+            "Sector": "Technology",
+            "Year": 2021,
+            "Avg_Close_Price": 167.0145937682144
+        },
+        {
+            "Sector": "Basic Materials",
+            "Year": 2022,
+            "Avg_Close_Price": 137.43446207084503
+        },
+        {
+            "Sector": "Communication Services",
+            "Year": 2022,
+            "Avg_Close_Price": 74.02172887006401
+        },
+        {
+            "Sector": "Consumer Cyclical",
+            "Year": 2022,
+            "Avg_Close_Price": 168.75005019898433
+        },
+        {
+            "Sector": "Consumer Defensive",
+            "Year": 2022,
+            "Avg_Close_Price": 159.12462931747402
+        },
+        {
+            "Sector": "Energy",
+            "Year": 2022,
+            "Avg_Close_Price": 80.55886480019862
+        },
+        {
+            "Sector": "Financial Services",
+            "Year": 2022,
+            "Avg_Close_Price": 171.64220858275783
+        },
+        {
+            "Sector": "Healthcare",
+            "Year": 2022,
+            "Avg_Close_Price": 239.5204078847608
+        },
+        {
+            "Sector": "Industrials",
+            "Year": 2022,
+            "Avg_Close_Price": 179.66997538904744
+        },
+        {
+            "Sector": "Technology",
+            "Year": 2022,
+            "Avg_Close_Price": 145.07741552805047
+        },
+        {
+            "Sector": "Basic Materials",
+            "Year": 2023,
+            "Avg_Close_Price": 153.78017783584596
+        },
+        {
+            "Sector": "Communication Services",
+            "Year": 2023,
+            "Avg_Close_Price": 83.8864233574232
+        },
+        {
+            "Sector": "Consumer Cyclical",
+            "Year": 2023,
+            "Avg_Close_Price": 171.6847813835144
+        },
+        {
+            "Sector": "Consumer Defensive",
+            "Year": 2023,
+            "Avg_Close_Price": 154.23448464457195
+        },
+        {
+            "Sector": "Energy",
+            "Year": 2023,
+            "Avg_Close_Price": 94.16944413299561
+        },
+        {
+            "Sector": "Financial Services",
+            "Year": 2023,
+            "Avg_Close_Price": 176.99042114639283
+        },
+        {
+            "Sector": "Healthcare",
+            "Year": 2023,
+            "Avg_Close_Price": 258.84106900215147
+        },
+        {
+            "Sector": "Industrials",
+            "Year": 2023,
+            "Avg_Close_Price": 191.99380045890808
+        },
+        {
+            "Sector": "Technology",
+            "Year": 2023,
+            "Avg_Close_Price": 165.2304761786461
+        },
+        {
+            "Sector": "Basic Materials",
+            "Year": 2024,
+            "Avg_Close_Price": 183.91147261649843
+        },
+        {
+            "Sector": "Communication Services",
+            "Year": 2024,
+            "Avg_Close_Price": 132.54771007377815
+        },
+        {
+            "Sector": "Consumer Cyclical",
+            "Year": 2024,
+            "Avg_Close_Price": 194.45792065726386
+        },
+        {
+            "Sector": "Consumer Defensive",
+            "Year": 2024,
+            "Avg_Close_Price": 189.65271621280246
+        },
+        {
+            "Sector": "Energy",
+            "Year": 2024,
+            "Avg_Close_Price": 104.26297397159395
+        },
+        {
+            "Sector": "Financial Services",
+            "Year": 2024,
+            "Avg_Close_Price": 230.39659545345913
+        },
+        {
+            "Sector": "Healthcare",
+            "Year": 2024,
+            "Avg_Close_Price": 310.32028196614885
+        },
+        {
+            "Sector": "Industrials",
+            "Year": 2024,
+            "Avg_Close_Price": 224.69115404666417
+        },
+        {
+            "Sector": "Technology",
+            "Year": 2024,
+            "Avg_Close_Price": 223.55630759871195
+        },
+        {
+            "Sector": "Basic Materials",
+            "Year": 2025,
+            "Avg_Close_Price": 189.83655160598755
+        },
+        {
+            "Sector": "Communication Services",
+            "Year": 2025,
+            "Avg_Close_Price": 170.59239308493477
+        },
+        {
+            "Sector": "Consumer Cyclical",
+            "Year": 2025,
+            "Avg_Close_Price": 221.55711271476747
+        },
+        {
+            "Sector": "Consumer Defensive",
+            "Year": 2025,
+            "Avg_Close_Price": 204.17903473069933
+        },
+        {
+            "Sector": "Energy",
+            "Year": 2025,
+            "Avg_Close_Price": 99.47550234832764
+        },
+        {
+            "Sector": "Financial Services",
+            "Year": 2025,
+            "Avg_Close_Price": 286.49697888031005
+        },
+        {
+            "Sector": "Healthcare",
+            "Year": 2025,
+            "Avg_Close_Price": 277.83068120269775
+        },
+        {
+            "Sector": "Industrials",
+            "Year": 2025,
+            "Avg_Close_Price": 248.08286342658997
+        },
+        {
+            "Sector": "Technology",
+            "Year": 2025,
+            "Avg_Close_Price": 240.55811950540541
+        },
+        {
+            "Sector": "Basic Materials",
+            "Year": 2026,
+            "Avg_Close_Price": 208.0890695640019
+        },
+        {
+            "Sector": "Communication Services",
+            "Year": 2026,
+            "Avg_Close_Price": 182.8917625291007
+        },
+        {
+            "Sector": "Consumer Cyclical",
+            "Year": 2026,
+            "Avg_Close_Price": 241.59120065825326
+        },
+        {
+            "Sector": "Consumer Defensive",
+            "Year": 2026,
+            "Avg_Close_Price": 213.50314361330064
+        },
+        {
+            "Sector": "Energy",
+            "Year": 2026,
+            "Avg_Close_Price": 114.97754821096147
+        },
+        {
+            "Sector": "Financial Services",
+            "Year": 2026,
+            "Avg_Close_Price": 318.98176112174986
+        },
+        {
+            "Sector": "Healthcare",
+            "Year": 2026,
+            "Avg_Close_Price": 310.1765115465437
+        },
+        {
+            "Sector": "Industrials",
+            "Year": 2026,
+            "Avg_Close_Price": 297.5663753782
+        },
+        {
+            "Sector": "Technology",
+            "Year": 2026,
+            "Avg_Close_Price": 245.09099194833212
+        }
+    ]
+}
