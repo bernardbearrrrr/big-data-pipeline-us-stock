@@ -6,8 +6,8 @@
 ### **Team Members (Kelas B - Kelompok 4)**
 * **Bernardo Frederick Kowe** - 0706022310049
 * **Jerell Wijaya** - 0706022110030
-* **XXXXXX** - NIM
-* **XXXXXX** - NIM
+* **Steve Reynard Prasetyo** - 0706022310027
+* **Valentyno Marcel Gunawan** - 0706022310029
 * **XXXXXX** - NIM
 * **XXXXXX** - NIM
 
